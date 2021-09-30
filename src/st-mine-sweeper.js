@@ -28,26 +28,31 @@ export default function minesweeper(matrix) {
     .fill([])
     .map((item) => (item = Array(matrix[0].length).fill(0)));
   for (let i = 0; i < matrix.length; i++) {
-    for (let j = 0; j < matrix.length; j++) {
+    for (let j = 0; j < matrix[i].length; j++) {
       if (matrix[i][j]) {
-        if (typeof matrix[i - 1] !== "undefined") answer[i - 1][j - 1] += 1;
-        if (typeof matrix[i - 1] !== "undefined") answer[i - 1][j] += 1;
-        if (typeof matrix[i - 1] !== "undefined") answer[i - 1][j + 1] += 1;
+        if (typeof answer[i - 1] !== "undefined") {
+          if (typeof matrix[i - 1][j - 1] !== "undefined") answer[i - 1][j - 1] += 1;
+          if (typeof matrix[i - 1][j + 1] !== "undefined") answer[i - 1][j + 1] += 1;
+          answer[i - 1][j] += 1;
+        }
 
-        if (typeof matrix[j - 1] !== "undefined") answer[i][j - 1] += 1;
-        if (typeof matrix[j + 1] !== "undefined") answer[i][j + 1] += 1;
+        if (typeof answer[i][j - 1] !== "undefined") answer[i][j - 1] += 1;
+        if (typeof answer[i][j + 1] !== "undefined") answer[i][j + 1] += 1;
 
-        if (typeof matrix[j - 1] !== "undefined") answer[i + 1][j - 1] += 1;
-        if (typeof matrix[i + 1] !== "undefined") answer[i + 1][j] += 1;
-        if (typeof matrix[i + 1] !== "undefined") answer[i + 1][j + 1] += 1;
+        if (typeof matrix[i + 1] !== "undefined") {
+          if (typeof matrix[i + 1][j - 1] !== "undefined") answer[i + 1][j - 1] += 1;
+          if (typeof matrix[i + 1][j + 1] !== "undefined") answer[i + 1][j + 1] += 1;
+          answer[i + 1][j] += 1;
+        }
       }
     }
   }
   return answer;
 }
 
-console.log(minesweeper([
-  [false, false, false],
-  [false, false, false],
-])
+console.log(
+  minesweeper([
+    [true, false, false],
+    [false, true, false],
+  ])
 );
