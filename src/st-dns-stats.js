@@ -1,4 +1,4 @@
-import { NotImplementedError } from '../extensions/index.js';
+import { NotImplementedError } from "../extensions/index.js";
 
 /**
  * Given an array of domains, return the object with the appearances of the DNS.
@@ -22,7 +22,27 @@ import { NotImplementedError } from '../extensions/index.js';
  * }
  *
  */
-export default function getDNSStats(/* domains */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+export default function getDNSStats(domains) {
+  const dns = {};
+  domains.forEach((domain) => {
+    const divided = domain.split(".").reverse();
+    const collected = [];
+    let current = "";
+    divided.forEach((part) => {
+      current += `.${part}`;
+      collected.push(current);
+    });
+
+    collected.forEach((address) => {
+      if (!dns[address]) {
+        dns[address] = 0;
+      }
+      dns[address]++;
+    });
+  });
+
+  return dns;
 }
+
+console.log(getDNSStats(["code.yandex.ru", "music.yandex.ru", "yandex.ru"]));
+// getDNSStats(['epam.com']), { '.com': 1, '.com.epam': 1 }
