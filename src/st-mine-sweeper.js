@@ -1,4 +1,4 @@
-import { NotImplementedError } from '../extensions/index.js';
+import { NotImplementedError } from "../extensions/index.js";
 
 /**
  * In the popular Minesweeper game you have a board with some mines and those cells
@@ -23,7 +23,31 @@ import { NotImplementedError } from '../extensions/index.js';
  *  [1, 1, 1]
  * ]
  */
-export default function minesweeper (/* matrix */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+export default function minesweeper(matrix) {
+  let answer = Array(matrix.length)
+    .fill([])
+    .map((item) => (item = Array(matrix[0].length).fill(0)));
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix.length; j++) {
+      if (matrix[i][j]) {
+        if (typeof matrix[i - 1] !== "undefined") answer[i - 1][j - 1] += 1;
+        if (typeof matrix[i - 1] !== "undefined") answer[i - 1][j] += 1;
+        if (typeof matrix[i - 1] !== "undefined") answer[i - 1][j + 1] += 1;
+
+        if (typeof matrix[j - 1] !== "undefined") answer[i][j - 1] += 1;
+        if (typeof matrix[j + 1] !== "undefined") answer[i][j + 1] += 1;
+
+        if (typeof matrix[j - 1] !== "undefined") answer[i + 1][j - 1] += 1;
+        if (typeof matrix[i + 1] !== "undefined") answer[i + 1][j] += 1;
+        if (typeof matrix[i + 1] !== "undefined") answer[i + 1][j + 1] += 1;
+      }
+    }
+  }
+  return answer;
 }
+
+console.log(minesweeper([
+  [false, false, false],
+  [false, false, false],
+])
+);

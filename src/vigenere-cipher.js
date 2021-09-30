@@ -23,70 +23,70 @@ export default class VigenereCipheringMachine {
   constructor(direction = true) {
     this.direction = direction;
     this.alphabet = "abcdefghijklmnopqrstuvwxyz".toUpperCase().split("");
+    this.message;
+    this.key;
   }
+
+  formKeyString() {
+    let keyString = "";
+    let j = 0;
+    for (let i = 0; i < this.message.length; i++) {
+      if (this.alphabet.indexOf(this.message[i]) > -1) {
+        keyString += this.key[j];
+        j++;
+      } else {
+        keyString += this.message[i];
+      }
+      if (j >= this.key.length) j = 0;
+    }
+    return keyString;
+  }
+
   encrypt(message, key) {
-    // const messageBig = message.toUpperCase();
-    // const keyBig = key.toUpperCase();
-    // let repeated = "";
-    // let j = 0;
-    // for (let i = 0; i < messageBig.length; i++) {
-    //   if (this.alphabet.indexOf(messageBig[i]) > -1) {
-    //     repeated += keyBig[j];
-    //     j++;
-    //   } else {
-    //     repeated += messageBig[i];
-    //   }
-    //   if (j > key.length - 1) j = 0;
-    // }
+    if (!message || !key) throw Error('Incorrect arguments!');
+    this.message = message.toUpperCase();
+    this.key = key.toUpperCase();
+    let cipher = "";
+    let keyString = this.formKeyString(this.message, this.key);
+    console.log(keyString);
+    for (let i = 0; i < this.message.length; i++) {
+      if (this.alphabet.indexOf(this.message[i]) > -1) {
+        let messagePos = this.alphabet.indexOf(this.message[i]);
+        let keyPos = this.alphabet.indexOf(keyString[i]);
+        let position = messagePos + keyPos;
+        if (position >= this.alphabet.length) position -= this.alphabet.length;
+        cipher += this.alphabet[position];
+      } else {
+        cipher += this.message[i];
+      }
+    }
 
-    // let cipher = "";
-    // for (let i = 0; i < messageBig.length; i++) {
-    //   if (this.alphabet.indexOf(messageBig[i]) > -1) {
-    //     let row = this.alphabet.indexOf(messageBig[i]);
-    //     let col = this.alphabet.indexOf(repeated[i]);
-    //     let position = row + col;
-    //     if (position > this.alphabet.length) position -= this.alphabet.length;
-    //     cipher += this.alphabet[position];
-    //   } else {
-    //     cipher += messageBig[i];
-    //   }
-    // }
-
-    // return this.direction ? cipher : cipher.split("").reverse().join("");
+    return this.direction ? cipher : cipher.split("").reverse().join("");
   }
 
-  decrypt(cipher, key) {
-    // const cipherBig = cipher.toUpperCase();
-    // const keyBig = key.toUpperCase();
-    // let repeated = "";
-    // let j = 0;
-    // for (let i = 0; i < cipherBig.length; i++) {
-    //   if (this.alphabet.indexOf(cipherBig[i]) > -1) {
-    //     repeated += keyBig[j];
-    //     j++;
-    //   } else {
-    //     repeated += cipherBig[i];
-    //   }
-    //   if (j > key.length - 1) j = 0;
-    // }
-
-    // let message = "";
-    // for (let i = 0; i < cipherBig.length; i++) {
-    //   if (this.alphabet.indexOf(cipherBig[i]) > -1) {
-    //     let col = this.alphabet.indexOf(cipherBig[i]);
-    //     let row = this.alphabet.indexOf(repeated[i]);
-    //     let position = row - col;
-    //     if (position > this.alphabet.length) position -= this.alphabet.length;
-    //     message += this.alphabet[position];
-    //   } else {
-    //     message += cipherBig[i];
-    //   }
-    // }
-    // return message;
+  decrypt(message, key) {
+    if (!message || !key) throw Error('Incorrect arguments!');
+    this.message = message.toUpperCase();
+    this.key = key.toUpperCase();
+    let cipher = "";
+    let keyString = this.formKeyString(this.message, this.key);
+    for (let i = 0; i < this.message.length; i++) {
+      if (this.alphabet.indexOf(this.message[i]) > -1) {
+        let messagePos = this.alphabet.indexOf(this.message[i]);
+        let keyPos = this.alphabet.indexOf(keyString[i]);
+        let position = messagePos - keyPos;
+        if (position < 0) position += this.alphabet.length;
+        cipher += this.alphabet[position];
+      } else {
+        cipher += this.message[i];
+      }
+    }
+    return this.direction ? cipher : cipher.split("").reverse().join("");
   }
 }
 
 const directMachine = new VigenereCipheringMachine();
 console.log(directMachine.direction);
-console.log(directMachine.encrypt("attack at dawn!", "alphonse"));
+
+console.log(directMachine.encrypt("Samelengthkey", "Samelengthkey"));
 console.log(directMachine.decrypt("AEIHQX SX DLLU!", "alphonse"));

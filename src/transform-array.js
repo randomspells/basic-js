@@ -17,22 +17,29 @@ export default function transform(arr) {
   if (!Array.isArray(arr)) {
     throw new Error("'arr' parameter must be an instance of the Array!");
   }
-
-  const newArray = arr.map((item) => item);
-  for (let i = 0; i < newArray.length; i++) {
-    if (newArray[i] === "--double-next" && newArray[i + 1]) {
-      newArray[i] = newArray[i + 1];
-    }
-    if (newArray[i] === "--double-prev" && newArray[i - 1]) {
-      newArray[i] = newArray[i - 1];
-    }
-    if (newArray[i] === "--discard-next" && newArray[i + 1]) {
-      newArray[i + 1] = "--";
-    }
-    if (newArray[i] === "--discard-prev" && newArray[i - 1]) {
-      newArray[i - 1] = "--";
+  const answer = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === "--double-prev") {
+      if (arr[i - 1]) {
+        answer.push(arr[i - 1]);
+      }
+    } else if (arr[i] === "--double-next") {
+      if (arr[i + 1]) {
+        answer.push(arr[i + 1]);
+      }
+    } else if (arr[i] === "--discard-prev") {
+      answer.pop();
+    } else if (arr[i] === "--discard-next") {
+      if (arr[i + 2] === "--double-prev" || arr[i + 2] === "--discard-prev") {
+        i += 2;
+      } else {
+        i += 1;
+      }
+    } else {
+      answer.push(arr[i]);
     }
   }
-  return newArray.filter((item) => String(item).indexOf("--") === -1);
+  return answer;
 }
 
+console.log(transform(["--discard-prev", 1, 2, 3]));
